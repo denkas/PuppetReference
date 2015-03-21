@@ -90,15 +90,15 @@
   <li class="toc-lv2"><a href="#always-upgrade-the-puppet-master-first">常にPuppet masterのアップグレードを最初にする</a></li>
   <li class="toc-lv2"><a href="#use-more-care-with-major-releases">メジャーリリースではより慎重に</a>
 <ol class="toc">
-   <li class="toc-lv3"><a href="#additional-precautions">Additional Precautions</a></li>
-   <li class="toc-lv3"><a href="#versioning-in-puppet-3-and-later">Versioning in Puppet 3 and Later</a></li>
-   <li class="toc-lv3"><a href="#versioning-in-puppet-2x">Versioning in Puppet 2.x</a></li>
+   <li class="toc-lv3"><a href="#additional-precautions">追加の確認事項</a></li>
+   <li class="toc-lv3"><a href="#versioning-in-puppet-3-and-later">Puppet 3以降のバージョン付与について</a></li>
+   <li class="toc-lv3"><a href="#versioning-in-puppet-2x">Puppet 2.xでのバージョン付与について</a></li>
 </ol></li>
-  <li class="toc-lv2"><a href="#roll-out-in-stages">Roll Out In Stages</a>
+  <li class="toc-lv2"><a href="#roll-out-in-stages">新バージョンへの段階的な移行</a>
 <ol class="toc">
-   <li class="toc-lv3"><a href="#option-1-spin-up-temporary-puppet-master-or-cull-a-master-from-your-load-balancer-pool">Option 1: Spin Up Temporary Puppet Master, or Cull a Master From Your Load Balancer Pool</a></li>
-   <li class="toc-lv3"><a href="#option-2-run-two-instances-of-puppet-master-at-once">Option 2: Run Two Instances of Puppet Master at Once</a></li>
-   <li class="toc-lv3"><a href="#option-3-upgrade-master-and-roll-back-if-needed">Option 3: Upgrade Master and Roll Back if Needed</a></li>
+   <li class="toc-lv3"><a href="#option-1-spin-up-temporary-puppet-master-or-cull-a-master-from-your-load-balancer-pool">Option 1: テンポラリのPuppet Master、もしくは負荷分散プールのPuppet Masterを1台だけ新バージョンへ移行する</a></li>
+   <li class="toc-lv3"><a href="#option-2-run-two-instances-of-puppet-master-at-once">Option 2: 一度２つのPuppet masterインスタンスを動作させる</a></li>
+   <li class="toc-lv3"><a href="#option-3-upgrade-master-and-roll-back-if-needed">Option 3: Puppet masterをアップグレードし、もし何かあったらロールバックする</a></li>
 </ol></li>
 </ol></nav>
 
@@ -128,7 +128,7 @@ Puppetによってインフラ基盤を管理するようにした後の<strong>
 <ul>
   <li>Maintain your own package repositories, test new Puppet releases in a dev environment, and only introduce known-good versions into your production repo. Many sysadmins consider this to be best practice for <strong>any</strong> mission-critical packages.</li>
 
-  <li>あなた用のパッケージリポジトリをメンテナンスし、新しいバージョンのPuppetを開発用の環境で試験してください。そしてよく確認が取れたバージョンだけを商用環境のリポジトリに入れるようにしてください。多くのシステム管理者は、<strong>どんな</strong>ミッションクリティカルなパッケージであっても、これがベストプラクティスであると考えています。</li>
+  <li>あなた用のパッケージリポジトリをメンテナンスし、新しいバージョンのPuppetを開発用の環境で試験してください。そしてよく確認が取れたバージョンだけを運用中のリポジトリに入れるようにしてください。多くのシステム管理者は、<strong>どんな</strong>ミッションクリティカルなパッケージであっても、これがベストプラクティスであると考えています。</li>
 
   <li>Use Apt’s pinning feature or Yum’s versionlock plugin to lock Puppet to a specific version, and only upgrade when you have a roll-out plan in place.</li>
 
@@ -270,21 +270,21 @@ $ sudo yum versionlock puppet
 
 <h2 id="roll-out-in-stages">Roll Out In Stages</h2>
 
-<h2 id="roll-out-in-stages">段階的な運用開始</h2>
+<h2 id="roll-out-in-stages">新バージョンへの段階的な移行</h2>
 
 
 <p>When upgrading, especially between major versions, we recommend rolling out the upgrade in stages. Use one of the following three options:</p>
 
-<p>アップグレードの際、特にメジャーバージョン間のアップグレード場合は、段階的に運用開始する事を推奨します。以下３つの選択肢のち１つを使ってください:</p>
+<p>アップグレードの際、特にメジャーバージョン間のアップグレード場合は、段階的に新バージョンへ移行する事を推奨します。以下３つの選択肢のち１つを使ってください:</p>
 
 
 <h3 id="option-1-spin-up-temporary-puppet-master-or-cull-a-master-from-your-load-balancer-pool">Option 1: Spin Up Temporary Puppet Master, or Cull a Master From Your Load Balancer Pool</h3>
 
-<h3 id="option-1-spin-up-temporary-puppet-master-or-cull-a-master-from-your-load-balancer-pool">Option 1: テンポラリのPuppet Master、もしくは負荷分散プールから1台のPuppet Masterを抜き出して運用開始する</h3>
+<h3 id="option-1-spin-up-temporary-puppet-master-or-cull-a-master-from-your-load-balancer-pool">Option 1: テンポラリのPuppet Master、もしくは負荷分散プールのPuppet Masterを1台だけ新バージョンへ移行する</h3>
 
 <p>The best approach is to spin up a temporary puppet master, then point a few test nodes at it.</p>
 
-<p>一番良いアプローチはテンポラリのPuppet Masterで運用開始する事です。そうしていくつかのテストノードを指定します。</p>
+<p>一番良いアプローチはテンポラリのPuppet Masterを新バージョンへ移行させ、テスト用ノードで新バージョンをテストする事です。</p>
 
 <ul>
   <li>If you run a multi-master site and can pull a puppet master out of the load balancer pool for temporary test duty, do that. Upgrade Puppet on it, and follow steps 5-10 below.</li>
@@ -293,7 +293,7 @@ $ sudo yum versionlock puppet
 
   <li>If you run a multi-master site and use Puppet to configure new puppet masters, you can also spin up a new node and use Puppet to configure it. Upgrade Puppet on it, and follow steps 5-10 below.</li>
 
-  <li>もし複数masterのサイトで且つ新しいPuppet masterをPuppetを使って設定するのなら、新しいノードを運用開始してPuppetを使って設定する事もまた可能です。Puppetのアップグレードをここでする場合は、以下のステップ5～10に従って実行してください。</li>
+  <li>もし複数masterのサイトで且つ新しいPuppet masterをPuppetを使って設定するのなら、新しいノードを新バージョンへ移行してPuppetを使って設定する事もまた可能です。Puppetのアップグレードをここでする場合は、以下のステップ5～10に従って実行してください。</li>
 
   <li>Otherwise, follow steps 1-10 below.</li>
   <li>それ以外の場合は、ステップ1～10に従って実行してください。</li>
@@ -339,48 +339,123 @@ $ sudo yum versionlock puppet
 
   <li>Revert the <code>server</code> setting on all test nodes. Decommission the temporary puppet master. Upgrade your production puppet master(s) by stopping their web server, upgrading the puppet package, and restarting their web server. Upgrade all your production nodes. (Most packaging systems allow you to use Puppet to upgrade Puppet.)</li>
 
-  <li>全てのテスト用ノードで<code>server</code>の設定を元に戻し、テンポラリのPuppet masterを廃止します。商用環境のPuppet masterにて、Webサーバの停止、Puppetパッケージのアップグレード、Webサーバの再起動の順でアップグレードします。そして全ての商用環境のノードでアップグレードします（ほとんどのパッケージシステムを使ってPuppetのアップグレードができます）。
+  <li>全てのテスト用ノードで<code>server</code>の設定を元に戻し、テンポラリのPuppet masterを廃止します。運用中のPuppet masterにて、Webサーバの停止、Puppetパッケージのアップグレード、Webサーバの再起動の順でアップグレードします。そして全ての運用中のノードでアップグレードします（ほとんどのパッケージシステムを使ってPuppetのアップグレードができます）。
 
 </ol>
 
+
+
 <h3 id="option-2-run-two-instances-of-puppet-master-at-once">Option 2: Run Two Instances of Puppet Master at Once</h3>
+<h3 id="option-2-run-two-instances-of-puppet-master-at-once">Option 2: 一度２つのPuppet masterインスタンスを動作させる</h3>
 
 <p>You can also run a second instance of puppet master on your production puppet master server, using the same modules, manifests, data, ENC, and SSL configuration.</p>
 
+<p>運用中のPuppet masterサーバ上で２つ目のインスタンスを動作させて、モジュール、マニフェスト、データ、ENC、SSL設定で同じものを使う事ができます。</p>
+
+
 <blockquote>
   <p><strong>Note:</strong> This is generally reliable, but has a small chance of yielding inaccurate results. (This problem would require a major version to remove a given code path but not fail hard when attempting to access the code path; we are not currently aware of a situation that would cause that.)</p>
+
+  <p><strong>注意:</strong> この手順は一般的に信頼できますが、不正確な結果を返す可能性が少しあります（この問題ですが、この手順の場合メジャーバージョンが設定しているコードパスの削除をしないとならないのですが、コードパスにアクセスしようとしたとしても止まってくれないというものです；ただし今のところこの問題で何かしら引き起こされるという認識はありません）。</p>
 </blockquote>
 
 <ol>
   <li><a href="http://downloads.puppetlabs.com/puppet/">Download a tarball of the Puppet source code for the new version.</a> Unzip it somewhere <strong>other than your normal Ruby library directory.</strong> (<code>tar -xf puppet-&lt;version&gt;</code>)</li>
+
+  <li><a href="http://downloads.puppetlabs.com/puppet/">新しいバージョンのPuppetのソースコードをダウンロード</a>します。<strong>通常のRubyライブラリを配置している場所以外へ</strong>展開してください。(<code>tar -xf puppet-&lt;version&gt;</code>)</li>
+
   <li>Open a root shell, which should stay open for the duration of this test. (<code>sudo -i</code>)</li>
+
+  <li>rootユーザのターミナルを立ち上げます。これをテスト中は開いたままにしておきます。(<code>sudo -i</code>)</li>
+
   <li>Change directory into the source tarball. (<code>cd puppet-&lt;version&gt;</code>)</li>
+
+  <li>ソースコードを展開したディレクトリに移動します。(<code>cd puppet-&lt;version&gt;</code>)</li>
+
   <li>Add the lib directory to your shell’s RUBYLIB. (<code>export RUBYLIB=$(pwd)/lib:$RUBYLIB</code>)</li>
+
+  <li>動作中のシェルに環境変数RUBYLIBを設定します。(<code>export RUBYLIB=$(pwd)/lib:$RUBYLIB</code>)</li>
+
   <li>Run <code>./bin/puppet master --no-daemonize --verbose --masterport 8141</code>. This will run a puppet master <strong>on a different port</strong> in the foreground so you can easily see log messages and warnings. Use care to limit concurrent checkins on your test nodes; this WEBrick puppet master cannot handle sustained load.</li>
+
+  <li><code>./bin/puppet master --no-daemonize --verbose --masterport 8141</code>を実行します。<strong>通常とは異なるポートで</strong>Puppet masterが起動します。フォアグラウンドで動作しますので、ログメッセージや警告を容易に確認できます。テストノードへの同時接続制限は注意深く実施してください。このWEBrickによるPuppet masterは負荷を持続して制御する事はできません。</li>
+
   <li>Choose a subset of your nodes to test with the new master, or spin up new nodes. Upgrade Puppet to the new version on them, and change their <code>masterport</code> setting to point to 8141.</li>
+
+  <li>新しいPuppet masterのテストに使うノードを動かすサブネットを選びます。もしくは新しいノードの運用を開始します。それらのPuppetを新しいバージョンにアップグレードし、それらの<code>masterport</code>設定を8141にします。</li>
+
   <li>Trigger a <code>puppet agent --test</code> run on every test node, so you can see log messages in the foreground. <strong>Look for changes to their resources;</strong> if you see anything you didn’t expect, investigate it. If something seems dangerous and you can’t figure it out, you may want to post to the <a href="https://groups.google.com/group/puppet-users/">Puppet users list</a> or ask other users in #puppet on Freenode.</li>
+
+  <li>全てのテスト用ノードで<code>puppet agent --test</code>を実行します。そうするとログメッセージをターミナルで確認する事ができます。<strong>テスト用ノードのリソースが変更されているか確認し</strong>、もし期待していない動きがあれば調査します。何かしらの危険性や把握できない事がある場合は、<a href="https://groups.google.com/group/puppet-users/">Puppet users list</a>へ投稿するか、Freenode（訳注：IRCのネットワーク）の#puppetで質問してください。</li>
+
   <li>Check the log messages in the terminal window on your puppet master. Look for warnings and deprecation notices.</li>
+
+  <li>ターミナル上、もしくはPuppet masterのログファイルからログメッセージを確認します。警告やdeprecate（廃止予定の機能）が無いか確認します。</li>
+
   <li>Check the actual configurations of your test nodes. Make sure everything is still working as expected.</li>
+
+  <li>テストノード上の設定が実際にどうなっているか確認します。全てが期待通りに動作している事を確実に確認してください。</li>
+
   <li>Repeat steps 6-9 with more test nodes if you’re still not sure.</li>
+
+  <li>もしまだ不明なところがあれば、テスト用ノードでステップ6～9を繰り返し、さらに確認してください。</li>
+
   <li>Revert the <code>masterport</code> setting on all test nodes. Kill the temporary puppet master process, delete the temporary copy of the puppet source. Upgrade your production puppet master(s) by stopping their web server, upgrading the puppet package, and restarting their web server. Upgrade all of your production nodes. (Most packaging systems allow you to use Puppet to upgrade Puppet.)</li>
+
+  <li>全てのテスト用ノードで<code>masterport</code>の設定を元に戻し、テンポラリのPuppet masterプロセスをkill、一時的にコピーしたPuppetのソースコードを削除します。運用中のPuppet masterにて、Webサーバの停止、Puppetパッケージのアップグレード、Webサーバの再起動の順でアップグレードします。そして全ての運用中のノードでアップグレードします（ほとんどのパッケージシステムを使ってPuppetのアップグレードができます）。</li>
+
 </ol>
 
 <h3 id="option-3-upgrade-master-and-roll-back-if-needed">Option 3: Upgrade Master and Roll Back if Needed</h3>
 
+<h3 id="option-3-upgrade-master-and-roll-back-if-needed">Option 3: Puppet masterをアップグレードし、もし何かあったらロールバックする</h3>
+
 <p>For <strong>minor and bug fix releases,</strong> you can often take a simpler path. This is not universally recommended, but many users do it and survive.</p>
+
+
+<p><strong>マイナーリリースもしくはバグフィックスリリース</strong>向けには、このシンプルな手順が使えます。この手順は全般的に推奨しませんが、多くのユーザが実施しているので残しています。</p>
+
 
 <ol>
   <li>Disable puppet agent on all of your production nodes. This is best done with <a href="/mcollective">MCollective</a> and the <a href="/mcollective/reference/basic/basic_cli_usage.html#discovering-available-agents">puppetd plugin</a>, which can stop the agent on all nodes in a matter of seconds.</li>
+
+
+  <li>全ての運用中のノードでPuppet agentを停止します。<a href="/mcollective">MCollective</a>と<a href="/mcollective/reference/basic/basic_cli_usage.html#discovering-available-agents">puppetd plugin</a>を使って全ノードのPuppet agentを停止させるのが最も良い方法です。ほんの数秒で全ノードを停止させる事ができます。</li>
+
+
   <li>Upgrade your puppet master(s) to the new version of Puppet by stopping their web server, upgrading the puppet package, and restarting their web server.</li>
+
+
+  <li>Puppet masterサーバを、Webサーバの停止、Puppetパッケージのアップグレード、Webサーバの再起動の順でアップグレードします。</li>
+
+
   <li>Choose a subset of your nodes to test with the new master, or spin up new nodes. Upgrade Puppet to the new version on them.</li>
+
+  <li>新しいPuppet masterのテストに使うノードを動かすサブネットを選びます。もしくは新しいノードの運用を開始します。それらのPuppetを新しいバージョンにアップグレードします。</li>
+
+
   <li>Trigger a <code>puppet agent --test</code> run on every test node, so you can see log messages in the foreground. <strong>Look for changes to their resources;</strong> if you see anything you didn’t expect, investigate it. If something seems dangerous and you can’t figure it out, you may want to post to the <a href="https://groups.google.com/group/puppet-users/">Puppet users list</a> or ask other users in #puppet on Freenode.</li>
+
+  <li>全てのテスト用ノードで<code>puppet agent --test</code>を実行します。そうするとログメッセージをターミナルで確認する事ができます。<strong>テスト用ノードのリソースが変更されているか確認し</strong>、もし期待していない動きがあれば調査します。何かしらの危険性や把握できない事がある場合は、<a href="https://groups.google.com/group/puppet-users/">Puppet users list</a>へ投稿するか、Freenode（訳注：IRCのネットワーク）の#puppetで質問してください。</li>
+
+
   <li>Check your puppet master’s log files. Look for warnings and deprecation notices.</li>
+  <li>Puppet masterのログファイルを確認し、警告やdeprecate（廃止予定の機能）が無いか確認します。</li>
+
   <li>Check the actual configurations of your test nodes. Make sure everything is still working as expected.</li>
+  <li>テストノード上の設定が実際にどうなっているか確認します。全てが期待通りに動作している事を確実に確認してください。</li>
   <li>Repeat steps 3-6 with more test nodes if you’re still not sure.</li>
+  <li>もしまだ不明なところがあれば、テスト用ノードでステップ3～6を繰り返し、さらに確認してください。</li>
+
   <li>Do one of the following:
+  <li>以下のうち１つを実施します:
     <ul>
       <li>Upgrade Puppet and reactivate puppet agent on all of your production nodes.</li>
+      <li>Puppetをアップグレードし、Puppet agentを運用中の全ノードで起動します。</li>
+
       <li>Downgrade Puppet to a known-good version on your Puppet master and any test nodes.</li>
+      <li>Puppet masterとテスト用ノードを問題なく動作するバージョンにダウングレードします</li>
+
     </ul>
   </li>
 </ol>
